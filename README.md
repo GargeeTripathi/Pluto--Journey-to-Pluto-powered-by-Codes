@@ -21,6 +21,11 @@ This project is a **React + Vite frontend** for an interactive coding challenge 
 - ⚡ **Vite** – Lightning-fast bundler with instant reload  
 - 🎨 **TailwindCSS + ShadCN UI** – Styling and UI components  
 - 🔧 **Node.js + npm** – Development environment  
+![WhatsApp Image 2025-08-30 at 04 42 34_fff7f00b](https://github.com/user-attachments/assets/4da24f4b-efd9-46a2-8b30-5546307b08d5)
+![WhatsApp Image 2025-08-30 at 04 42 34_fff7f00b](https://github.com/user-attachments/assets/969973fe-9d34-4107-a9db-b166f7a953b1)
+![WhatsApp Image 2025-08-30 at 04 42 34_fff7f00b](https://github.com/user-attachments/assets/c417717b-01c7-44da-8d30-a3391be1bcc8)
+
+
 
 ---
 
