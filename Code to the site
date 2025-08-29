@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>Pluto - Journey to Pluto Powered by Codes</title>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Source+Code+Pro&display=swap');
+
+  /* Global resets and base */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  html, body {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: radial-gradient(ellipse at center, #000012 0%, #00000c 90%);
+    color: #d0dafc;
+    overflow-x: hidden;
+    user-select: none;
+  }
+
+  /* Starfield background container */
+  #starfield {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(ellipse at center, #0d0f28 0%, #00000b 80%);
+    overflow: hidden;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    opacity: 0.7;
+    animation-name: twinkle;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 0.15; }
+  }
+  /* Shooting star */
+  .shooting-star {
+    position: fixed;
+    opacity: 0.9;
+    background: linear-gradient(-45deg, white, transparent);
+    border-radius: 50%;
+    width: 3px;
+    height: 80px;
+    filter: drop-shadow(0 0 8px #b9e5ffcc);
+    animation-timing-function: linear;
+    pointer-events: none;
+    z-index: 1;
+  }
+  @keyframes shooting {
+    0% {
+      transform: translateX(0) translateY(0) rotate(45deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(-100vw) translateY(100vh) rotate(45deg);
+      opacity: 0;
+    }
+  }
+
+  /* Header: Pluto Logo and Slogan */
+  header {
+    text-align: center;
+    padding: 2.5rem 1rem 1rem;
+    position: relative;
+    z-index: 10;
+    user-select: none;
+  }
+  h1.pluto-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    color: #89b3ff;
+    letter-spacing: 1rem;
+    text-shadow:
+      0 0 10px #3e67f9,
+      0 0 22px #3773fc,
+      0 0 40px #325ddb,
+      0 0 60px #2f59cf;
+  }
+  h1.pluto-logo span {
+    display: inline-block;
+    position: relative;
+    width: 1.3rem; height: 1.3rem;
+    background: radial-gradient(circle at 40% 40%, #aec3d9, #4e6e96);
+    border-radius: 50%;
+    margin-left: 0.5rem;
+    box-shadow: inset 0 0 22px #7b9ddb, 0 0 34px #4973bb;
+    animation: planetPulse 4s ease-in-out infinite alternate;
+    vertical-align: middle;
+    top: 0;
+  }
+  @keyframes planetPulse {
+    0% { box-shadow: inset 0 0 22px #7b9ddb, 0 0 30px #4973bb; }
+    100% { box-shadow: inset 0 0 40px #3c6fff, 0 0 41px #3c6fff; }
+  }
+  .slogan {
+    margin-top: 0.4rem;
+    font-weight: 600;
+    font-size: clamp(1rem,2vw,1.4rem);
+    color: #aacdffcc;
+    text-shadow: 0 0 14px #4e72deaa;
+    user-select: text;
+  }
+
+  /* Main container */
+  main {
+    max-width: 960px;
+    margin: 0 auto 4rem;
+    padding: 2rem 2rem 3rem;
+    backdrop-filter: saturate(150%) blur(10px);
+    background: rgba(15,25,45,0.85);
+    border-radius: 1.5rem;
+    box-shadow: 0 0 50px #4a87ffbb;
+    position: relative;
+    z-index: 10;
+    color: #d2d9ffdd;
+  }
+
+  /* Login Container */
+  #login-container {
+    max-width: 400px;
+    margin: 0 auto 3rem;
+    padding: 2rem 2.5rem 3rem;
+    background: linear-gradient(120deg, #021022, #051742);
+    border-radius: 1.2rem;
+    box-shadow: 0 0 18px #4a7bffdd;
+    text-align: center;
+  }
+  #login-container label {
+    display: block;
+    font-size: 1.25rem;
+    color: #a6baffcc;
+    font-weight: 700;
+    cursor: text;
+    margin-bottom: 1rem;
+  }
+  #username-input {
+    width: 100%;
+    padding: 0.85rem 1.1rem;
+    font-size: 1.15rem;
+    border-radius: 15px;
+    background: #14264c;
+    border: 2px solid #4f89fbcc;
+    box-shadow: inset 0 0 18px #3165d8cc;
+    color: #d8e8ff;
+    font-weight: 600;
+    transition: box-shadow 0.3s ease, border-color 0.25s ease;
+  }
+  #username-input::placeholder {
+    color: #4c82ff99;
+  }
+  #username-input:focus {
+    outline: none;
+    border-color: #7aaaffcc;
+    box-shadow: 0 0 24px #7faaeecc, inset 0 0 24px #6e93ffc4;
+  }
+  #start-btn {
+    margin-top: 2.2rem;
+    width: 100%;
+    padding: 1.15rem 0;
+    background: linear-gradient(90deg, #3f82ffcc, #215ed2cc);
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: #e3eeffff;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 0 26px #3d7dffd9 inset;
+    cursor: pointer;
+    transition: 0.3s background-color ease, 0.25s box-shadow ease;
+    user-select: none;
+  }
+  #start-btn:disabled {
+    background: #1a3b7a88;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+  #start-btn:not(:disabled):hover {
+    background: #1264facc;
+    box-shadow: 0 0 30px #4ca0ffdd inset;
+  }
+  #start-btn:active:not(:disabled) {
+    transform: scale(0.96);
+  }
+
+  /* Missions container */
+  #missions-container {
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(295px,1fr));
+    gap: 1.1rem;
+  }
+  .mission-item {
+    background: linear-gradient(155deg, #16295e, #1a366b);
+    border-radius: 1rem;
+    box-shadow: 0 0 19px #426dffaa;
+    color: #a9bcffcc;
+    cursor: pointer;
+    transition: background-color 0.28s ease, transform 0.2s ease;
+    user-select: none;
+    padding: 1rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .mission-item:hover,
+  .mission-item:focus-visible,
+  .mission-item.selected {
+    background: linear-gradient(155deg, #1e3e9c, #1a3fa0);
+    box-shadow: 0 0 34px #4a85ffdd;
+    outline: none;
+    transform: scale(1.05);
+    color: #dce2ff;
+  }
+  .mission-item h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+  .mission-item p {
+    font-size: 1rem;
+    color: #bcccffbb;
+    flex-grow: 1;
+  }
+
+  /* Mission detail */
+  #mission-container {
+    margin-top: 3rem;
+    background: #051544dd;
+    border-radius: 1rem;
+    padding: 1.8rem 2rem;
+    box-shadow: 0 0 25px #396effcc;
+  }
+  #mission-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 2rem;
+    color: #70b5ff;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 18px #3e88ffbb;
+  }
+  #mission-desc {
+    font-size: 1.15rem;
+    color: #abc1fccc;
+    margin-bottom: 1.2rem;
+  }
+  #code-input {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 1.1rem;
+    width: 100%;
+    min-height: 190px;
+    border-radius: 1rem;
+    border: 2px solid #3d80ffcc;
+    background-color: #071b4acc;
+    color: #cad9ffcc;
+    padding: 1rem 1.2rem;
+    box-shadow: inset 0 0 15px #3d80ffcc;
+    resize: vertical;
+    transition: border-color 0.35s ease;
+  }
+  #code-input:focus {
+    outline: none;
+    border-color: #71a1ffc8;
+    box-shadow: 0 0 22px #71a1ffa4, inset 0 0 25px #71a1ffa4;
+  }
+  #submit-btn {
+    margin-top: 1.5rem;
+    background: linear-gradient(90deg, #3c7effdd, #255dc2ff);
+    padding: 1rem 2.8rem;
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #e4f0ffcc;
+    border: none;
+    border-radius: 1.5rem;
+    box-shadow: 0 0 28px #3f7dffaa inset;
+    cursor: pointer;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
+    user-select: none;
+  }
+  #submit-btn:hover {
+    background: #1851e6dd;
+    box-shadow: 0 0 38px #5faeffbb inset;
+  }
+  #submit-btn:disabled {
+    background: #18447d99;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  /* Feedback (success/error) */
+  #feedback {
+    margin-top: 1.5rem;
+    font-weight: 800;
+    font-size: 1.2rem;
+    min-height: 2.3rem;
+    user-select: text;
+  }
+  #feedback.success {
+    color: #42fba4;
+    text-shadow: 0 0 20px #23d68fcc;
+  }
+  #feedback.error {
+    color: #fc4f4f;
+    text-shadow: 0 0 15px #cc2121cc;
+  }
+
+  /* Leaderboard */
+  #leaderboard {
+    max-width: 480px;
+    margin: 3rem auto 1rem;
+    background: #041d5fbb;
+    border-radius: 1.5rem;
+    padding: 1.4rem 1.8rem 2rem;
+    box-shadow: 0 0 30px #407dffcc;
+    color: #bfd1ffcc;
+    user-select: none;
+  }
+  #leaderboard h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    text-align: center;
+    font-size: 1.8rem;
+    color: #7db1ffcc;
+    margin-bottom: 1.25rem;
+    text-shadow: 0 0 22px #3e69dcaa;
+  }
+  #leaderboard-list {
+    list-style: none;
+    max-height: 260px;
+    overflow-y: auto;
+    padding-left: 0;
+  }
+  #leaderboard-list li {
+    padding: 0.6rem 0;
+    font-weight: 900;
+    font-size: 1.15rem;
+    border-bottom: 1px solid #39539b99;
+    text-shadow: 0 0 6px #598affcc;
+  }
+  #leaderboard-list li:last-child {
+    border-bottom: none;
+  }
+
+  /* Scrollbar styling */
+  #missions-list, #leaderboard-list {
+    scrollbar-width: thin;
+    scrollbar-color: #3b70e7 #122544;
+  }
+  #missions-list::-webkit-scrollbar, #leaderboard-list::-webkit-scrollbar {
+    width: 8px;
+  }
+  #missions-list::-webkit-scrollbar-track, #leaderboard-list::-webkit-scrollbar-track {
+    background: #122544;
+    border-radius: 12px;
+  }
+  #missions-list::-webkit-scrollbar-thumb, #leaderboard-list::-webkit-scrollbar-thumb {
+    background-color: #375de7;
+    border-radius: 12px;
+  }
+
+</style>
+
+</head>
+
+<body>
+
+<div id="starfield" aria-hidden="true"></div>
+
+<header aria-label="Website header">
+  <h1 class="pluto-logo" aria-label="Pluto Logo">Pluto<span></span></h1>
+  <p class="slogan">Journey to Pluto powered by codes</p>
+</header>
+
+<main role="main" aria-label="Main content area">
+  <!-- Login and Username entry -->
+  <section id="username-container" aria-label="User login form">
+    <label for="username-input">Enter your Starship Call Sign</label>
+    <input id="username-input" type="text" placeholder="Captain Star" aria-required="true" autofocus />
+    <button id="start-btn" disabled aria-disabled="true">Launch Mission</button>
+  </section>
+
+  <!-- Missions container -->
+  <section id="missions-container" style="display:none;" aria-label="List of missions to select a coding challenge">
+    <h2>Select a Mission to Begin</h2>
+    <div id="missions-list" tabindex="0" aria-live="polite" aria-relevant="additions removals"></div>
+  </section>
+
+  <!-- Mission challenge container -->
+  <section id="mission-container" style="display:none;" aria-live="polite" aria-relevant="text" aria-label="Mission details and code editor">
+    <h2 id="mission-title"></h2>
+    <p id="mission-desc"></p>
+    <textarea id="code-input" aria-label="Code editor" placeholder="# Write your Python code here"></textarea>
+    <button id="submit-btn">Submit Code</button>
+    <div id="feedback" role="alert"></div>
+  </section>
+
+  <!-- Leaderboard -->
+  <section id="leaderboard" style="display:none;" aria-label="Players leaderboard">
+    <h3>Galactic Leaderboard</h3>
+    <ul id="leaderboard-list"></ul>
+  </section>
+</main>
+
+<script>
+  // Generate stars randomly on background for twinkle effect
+  const starfield = document.getElementById('starfield');
+  for (let i=0; i<250; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    star.style.top = (Math.random()*100) + 'vh';
+    star.style.left = (Math.random()*100) + 'vw';
+    const size = (Math.random()*1.4)+0.5;
+    star.style.width = size+'px';
+    star.style.height = size+'px';
+    star.style.animationDuration = (1.8 + Math.random()*2)+'s';
+    star.style.animationDelay = Math.random()*5 + 's';
+    starfield.appendChild(star);
+  }
+
+  const usernameInput = document.getElementById('username-input');
+  const startBtn = document.getElementById('start-btn');
+  const missionsContainer = document.getElementById('missions-container');
+  const missionsList = document.getElementById('missions-list');
+  const missionContainer = document.getElementById('mission-container');
+  const missionTitle = document.getElementById('mission-title');
+  const missionDesc = document.getElementById('mission-desc');
+  const codeInput = document.getElementById('code-input');
+  const submitBtn = document.getElementById('submit-btn');
+  const feedback = document.getElementById('feedback');
+  const leaderboard = document.getElementById('leaderboard');
+  const leaderboardList = document.getElementById('leaderboard-list');
+
+  let username = '';
+  let selectedMissionIndex = -1;
+
+  // Missions starting with print and variables progressively to loops and conditional
+  const missions = [
+    {
+      title: "Mission 1: Hello Pluto!",
+      description: "Type the Python command to print <code>'Hello Pluto!'</code> exactly.",
+      check: code => code.trim().toLowerCase().includes(print('hellopluto!')) || code.trim().toLowerCase().includes(print("hellopluto!")),
+      points: 5
+    },
+    {
+      title: "Mission 2: Store Numbers",
+      description: "Assign the number <code>5</code> to the variable <code>rockets</code>.",
+      check: code => code.replace(/\s/g,'').toLowerCase().includes(rockets=5),
+      points: 7
+    },
+    {
+      title: "Mission 3: Calculate Fuel",
+      description: "Assign the total fuel calculated as <code>rockets * 10</code> to <code>fuel_required</code>.",
+      check: code => {
+        let c = code.replace(/\s/g,'').toLowerCase();
+        return c.includes(fuel_required=rockets*10) || c.includes(fuel_required=10*rockets);
+      },
+      points: 8
+    },
+    {
+      title: "Mission 4: Check Distance",
+      description: "Write a Python statement that assigns <code>close_trip</code> to <code>True</code> if <code>distance&lt;100</code>, else <code>False</code>. Use if-else syntax.",
+      check: code => {
+        let c = code.replace(/\s/g,'').toLowerCase();
+        return c.includes(ifdistance<100:) && c.includes(closetrue) && c.includes(closefalse);
+      },
+      points: 12
+    },
+    {
+      title: "Mission 5: Loop Planets",
+      description: "Write a for loop to print the numbers from 1 to 5 inclusive.",
+      check: code => {
+        let c = code.toLowerCase();
+        return c.includes('for') && c.includes('inrange(1,6)') && c.includes('print');
+      },
+      points: 15
+    },
+    {
+      title: "Mission 6: Create Greeting Function",
+      description: "Define a function <code>greet</code> returning <code>'Hello Pluto!'</code>.",
+      check: code => {
+        let c = code.replace(/\s/g,'').toLowerCase();
+        return c.includes('defgreet():') && c.includes('return"hellopluto!"');
+      },
+      points: 18
+    }
+  ];
+
+  // Sample leaderboard data
+  let leaderboardData = [
+    {name: "Captain Nova", points: 100},
+    {name: "Commander Vega", points: 85},
+    {name: "Pilot Orion", points: 70}
+  ];
+
+  // Enable start button when username input is valid (3+ letters)
+  usernameInput.addEventListener('input', () => {
+    startBtn.disabled = usernameInput.value.trim().length < 3;
+  });
+
+  startBtn.addEventListener('click', e => {
+    e.preventDefault();
+    username = usernameInput.value.trim();
+    if(username.length < 3) return; // defensive
+
+    document.getElementById('username-container').style.display = 'none';
+    missionsContainer.style.display = 'grid';
+    leaderboard.style.display = 'block';
+    renderLeaderboard();
+    renderMissionList();
+  });
+
+  // Display available missions as clickable cards
+  function renderMissionList() {
+    missionsList.innerHTML = '';
+    missions.forEach((mission,i) => {
+      const card = document.createElement('div');
+      card.className = 'mission-item';
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-pressed', 'false');
+      card.innerHTML = <h3>${mission.title}</h3><p>${mission.description}</p>;
+      card.addEventListener('click', () => selectMission(i));
+      card.addEventListener('keydown', e => {
+        if(e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectMission(i);
+        }
+      });
+      missionsList.appendChild(card);
+    });
+  }
+
+  // Load mission and show editor
+  function selectMission(index) {
+    selectedMissionIndex = index;
+    missionContainer.style.display = 'block';
+    missionsContainer.style.display = 'none';
+    feedback.textContent = '';
+    feedback.className = '';
+    missionTitle.textContent = missions[index].title;
+    missionDesc.innerHTML = missions[index].description;
+    codeInput.value = '# Start typing your Python code here...';
+    submitBtn.disabled = false;
+    codeInput.focus();
+
+    // ARIA pressed states update
+    Array.from(missionsList.children).forEach((el,i) => {
+      el.setAttribute('aria-pressed', i === index ? 'true' : 'false');
+      el.classList.toggle('selected', i === index);
+    });
+  }
+
+  // Check mission on submit
+  submitBtn.addEventListener('click', () => {
+    if(selectedMissionIndex === -1) {
+      feedback.textContent = "Please select a mission first!";
+      feedback.className = 'error';
+      return;
+    }
+    const userCode = codeInput.value.trim();
+    if(userCode.length < 3) {
+      feedback.textContent = "Please enter your code!";
+      feedback.className = 'error';
+      return;
+    }
+    const mission = missions[selectedMissionIndex];
+    if(mission.check(userCode)) {
+      feedback.textContent = Fantastic! You completed "${mission.title}". You earned ${mission.points} ⭐!;
+      feedback.className = 'success';
+      addOrUpdateLeaderboard(username, mission.points);
+
+      // Reset to missions list for user to choose next challenge
+      missionContainer.style.display = 'none';
+      missionsContainer.style.display = 'grid';
+    } else {
+      feedback.textContent = "This isn't quite right yet. Try again!";
+      feedback.className = 'error';
+    }
+  });
+
+  // Leaderboard helper functions
+  function addOrUpdateLeaderboard(name, points) {
+    const idx = leaderboardData.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+    if(idx >= 0){
+      leaderboardData[idx].points += points;
+    } else {
+      leaderboardData.push({name, points});
+    }
+    leaderboardData.sort((a,b) => b.points - a.points);
+    renderLeaderboard();
+  }
+  function renderLeaderboard(){
+    leaderboardList.innerHTML = '';
+    leaderboardData.forEach(({name, points}) => {
+      const li = document.createElement('li');
+      li.textContent = ${name} - ${points} ⭐;
+      leaderboardList.appendChild(li);
+    });
+  }
+</script>
+</body>
+</html>
